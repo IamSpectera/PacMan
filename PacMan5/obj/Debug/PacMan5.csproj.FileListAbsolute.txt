@@ -1,0 +1,9 @@
+C:\Users\spect\RiderProjects\PacMan5\PacMan5\bin\Debug\PacMan5.exe.config
+C:\Users\spect\RiderProjects\PacMan5\PacMan5\bin\Debug\PacMan5.exe
+C:\Users\spect\RiderProjects\PacMan5\PacMan5\bin\Debug\PacMan5.pdb
+C:\Users\spect\RiderProjects\PacMan5\PacMan5\obj\Debug\PacMan5.csproj.AssemblyReference.cache
+C:\Users\spect\RiderProjects\PacMan5\PacMan5\obj\Debug\PacMan5.Properties.Resources.resources
+C:\Users\spect\RiderProjects\PacMan5\PacMan5\obj\Debug\PacMan5.csproj.GenerateResource.cache
+C:\Users\spect\RiderProjects\PacMan5\PacMan5\obj\Debug\PacMan5.csproj.CoreCompileInputs.cache
+C:\Users\spect\RiderProjects\PacMan5\PacMan5\obj\Debug\PacMan5.exe
+C:\Users\spect\RiderProjects\PacMan5\PacMan5\obj\Debug\PacMan5.pdb
