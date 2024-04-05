@@ -1,0 +1,17 @@
+﻿Today 4/5/24
+
+Fix Pacman flickering on the screen
+Place All the walls
+Place the dots
+Place the power dots
+Place the ghosts
+Make the ghosts move
+Make the ghosts kill Pacman
+
+Today 4/6/24
+
+Make the ghosts move randomly
+Make the ghosts move towards Pacman
+Make the ghosts move away from Pacman once power dot is eaten
+Make the ghosts move towards their home once eaten
+

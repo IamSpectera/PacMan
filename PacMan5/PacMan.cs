@@ -9,8 +9,7 @@ public class Pacman
 
     public Pacman()
     {
-        Sprite = Image.FromFile("..\\..\\images\\PM-pacman.png");
+        Sprite = Image.FromFile("..\\..\\images\\PM-pacman-right.png");
     }
-    
     
 }

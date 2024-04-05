@@ -82,8 +82,9 @@
     </ItemGroup>
     <ItemGroup>
       <Content Include="images\PM-ghost.png" />
-      <Content Include="images\PM-pacman.png" />
+      <Content Include="images\PM-pacman-right.png" />
       <Content Include="images\PM-pacmanarena.png" />
+      <Content Include="TODO.txt" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
 </Project>

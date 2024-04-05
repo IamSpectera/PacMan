@@ -16,6 +16,8 @@ public class GameBoard
         Walls = new List<Rectangle>();
 
         // Wall Creations
-        Walls.Add(new Rectangle(100, 100, 50, 10));
+        Walls.Add(new Rectangle(70, 100, 65, 10));
+  
     }
+    
 }
