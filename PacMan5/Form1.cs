@@ -11,6 +11,8 @@ namespace PacMan5
         private Pacman pacman;
         private Ghost ghost;
         private Timer gameTimer;
+        private int gridSize = 20; // Define the size of the grid cells
+
         public Form1()
         {
             InitializeComponent();
@@ -20,7 +22,7 @@ namespace PacMan5
             ghost = new Ghost { X = 100, Y = 100 }; // Initialize Ghost's position
 
             gameTimer = new Timer();
-            gameTimer.Interval = 50; 
+            gameTimer.Interval = 50;
             gameTimer.Tick += GameTimer_Tick;
             gameTimer.Start();
 
@@ -28,7 +30,6 @@ namespace PacMan5
             this.KeyPreview = true;
         }
 
-       
         private string direction = "Right";
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
@@ -54,69 +55,56 @@ namespace PacMan5
             }
         }
 
+
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+
+            e.Graphics.DrawImage(gameBoard.Sprite, new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height));
+
+            e.Graphics.DrawImage(pacman.Sprite,
+                new Rectangle(pacman.X, pacman.Y, this.ClientSize.Width / 20, this.ClientSize.Height / 20));
+
+            e.Graphics.DrawImage(ghost.Sprite,
+                new Rectangle(ghost.X, ghost.Y, this.ClientSize.Width / 20, this.ClientSize.Height / 20));
+
+            foreach (var pellet in gameBoard.Dots)
+            {
+                e.Graphics.FillRectangle(Brushes.White, new Rectangle(pellet.X, pellet.Y, 5, 5));
+            }
+
+            foreach (var wall in gameBoard.Walls)
+            {
+                e.Graphics.FillRectangle(Brushes.Blue, wall);
+            }
+        }
+
+
         private void GameTimer_Tick(object sender, EventArgs e)
         {
             // Store old position
             var oldX = pacman.X;
             var oldY = pacman.Y;
 
-            // Move Pacman based on current direction
-            switch (direction)
-            {
-                case "Up":
-                    pacman.Y -= 5;
-                    break;
-                case "Down":
-                    pacman.Y += 5;
-                    break;
-                case "Left":
-                    pacman.X -= 5;
-                    break;
-                case "Right":
-                    pacman.X += 5;
-                    break;
-            }
+            // Move Pacman based on current direction, now also passing window's width and height
+            pacman.Move(direction, gridSize, IsCollidingWithWall, this.ClientSize.Width, this.ClientSize.Height);
 
-            // Check for collision with wall
-            if (IsCollidingWithWall(pacman))
-            {
-                pacman.X = oldX;
-                pacman.Y = oldY;
-            }
+            // Invalidate old position
+            this.Invalidate(new Rectangle(oldX, oldY, this.ClientSize.Width / gridSize, this.ClientSize.Height / gridSize));
 
-            
-            this.Invalidate(new Rectangle(oldX, oldY, this.ClientSize.Width / 20, this.ClientSize.Height / 20));
-            this.Invalidate(new Rectangle(pacman.X, pacman.Y, this.ClientSize.Width / 20, this.ClientSize.Height / 20));
-        } 
-        
-        protected override void OnPaint(PaintEventArgs e) {
-            base.OnPaint(e);
-            
-            e.Graphics.DrawImage(gameBoard.Sprite, new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height));
-            
-            e.Graphics.DrawImage(pacman.Sprite, new Rectangle(pacman.X, pacman.Y, this.ClientSize.Width / 20, this.ClientSize.Height / 20));
-            
-            e.Graphics.DrawImage(ghost.Sprite, new Rectangle(ghost.X, ghost.Y, this.ClientSize.Width / 20, this.ClientSize.Height / 20));
-            
-            foreach (var pellet in gameBoard.Dots)
-            {
-                e.Graphics.FillRectangle(Brushes.White, new Rectangle(pellet.X, pellet.Y, 5, 5));
-            }
-            
-            foreach (var wall in gameBoard.Walls)
-            {
-                e.Graphics.FillRectangle(Brushes.Blue, wall);
-            }
+            // Invalidate new position
+            this.Invalidate(new Rectangle(pacman.X, pacman.Y, this.ClientSize.Width / gridSize, this.ClientSize.Height / gridSize));
         }
-        
-        private bool IsCollidingWithWall(Pacman pacman)
+
+        private bool IsCollidingWithWall(int x, int y)
         {
             var size = Math.Min(this.ClientSize.Width, this.ClientSize.Height) / 20;
-            
-            var pacmanRect = new Rectangle(pacman.X, pacman.Y, size, size);
-            
-            return pacman.X < 0 || pacman.Y < 0 || pacman.X + size > this.ClientSize.Width || pacman.Y + size > this.ClientSize.Height || gameBoard.Walls.Any(wall => wall.IntersectsWith(pacmanRect));
+            var offset = size / 2; // Adjust the offset value
+
+            var pacmanRect = new Rectangle(x + offset, y + offset, size - offset, size - offset);
+
+            return pacmanRect.Left < 0 || pacmanRect.Top < 0 || pacmanRect.Right > this.ClientSize.Width - size || pacmanRect.Bottom > this.ClientSize.Height - size || gameBoard.Walls.Any(wall => wall.IntersectsWith(pacmanRect));
         }
     }
-    
 }

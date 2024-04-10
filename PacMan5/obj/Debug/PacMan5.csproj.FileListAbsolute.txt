@@ -7,3 +7,4 @@ C:\Users\spect\RiderProjects\PacMan5\PacMan5\obj\Debug\PacMan5.csproj.GenerateRe
 C:\Users\spect\RiderProjects\PacMan5\PacMan5\obj\Debug\PacMan5.csproj.CoreCompileInputs.cache
 C:\Users\spect\RiderProjects\PacMan5\PacMan5\obj\Debug\PacMan5.exe
 C:\Users\spect\RiderProjects\PacMan5\PacMan5\obj\Debug\PacMan5.pdb
+C:\Users\spect\RiderProjects\PacMan5\PacMan5\obj\Debug\PacMan5.Form1.resources
