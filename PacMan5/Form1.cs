@@ -12,14 +12,16 @@ namespace PacMan5
         private Pacman pacman;
         private Ghost ghost;
         private Timer gameTimer;
-        private int gridSize = 20; // Define the size of pacman
+        private int gridSize = 20; // The size of pacman
 
         public Form1()
         {
             InitializeComponent();
 
+            // Wall Dimensions
             gameBoard = new GameBoard(20, 10, 20);
-            pacman = new Pacman { GridX = 185 / gridSize, GridY = 280 / gridSize }; // Initialize Pacman's position
+            // Pacman Location on the board
+            pacman = new Pacman { GridX = 185 / gridSize, GridY = 280 / gridSize };
             
             // ghost = new Ghost { X = 100, Y = 100 }; // Initialize Ghost's position
 
@@ -31,11 +33,14 @@ namespace PacMan5
             this.KeyDown += Form1_KeyDown;
             this.KeyPreview = true;
         }
-
+        
+        // Starting Direction of Pacman 
         private string direction = "Right";
 
+        // Key presses for the form
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
+            // Change direction based on key press & PNG
             switch (e.KeyCode)
             {
                 case Keys.Up:
@@ -63,8 +68,6 @@ namespace PacMan5
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            base.OnPaint(e);
-
             // Draw the walls
             foreach (var wall in gameBoard.Walls)
             {
@@ -92,7 +95,7 @@ namespace PacMan5
             var oldGridY = pacman.GridY;
 
             // Move Pacman based on current direction
-            pacman.Move(direction, gridSize, IsCollidingWithWall, this.ClientSize.Width, this.ClientSize.Height);
+            pacman.Move(direction, gridSize, IsCollidingWithWall, this.Width, this.Height);
 
             foreach (Pacman.Food food in gameBoard.Foods)
             {
@@ -109,10 +112,10 @@ namespace PacMan5
                 MessageBox.Show("Congratulations, you won!");
             }
             
-            // Invalidate old position
+            // Redraws where pacman was so he isnt there no more
             this.Invalidate(new Rectangle(oldGridX * gridSize, oldGridY * gridSize, gridSize, gridSize));
 
-            // Invalidate new position
+            // Draws pacman in new location
             this.Invalidate(new Rectangle(pacman.GridX * gridSize, pacman.GridY * gridSize, gridSize, gridSize));
         }
 

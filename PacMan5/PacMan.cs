@@ -44,7 +44,6 @@ public class Pacman
         else
         {
             // If the new direction is blocked, try to move in the last successful direction
-            // But only if the new direction is different from the last successful direction
             if (direction != LastSuccessfulDirection)
             {
                 Move(LastSuccessfulDirection, gridSize, isCollidingWithWall, windowWidth, windowHeight);
