@@ -85,7 +85,10 @@
     </ItemGroup>
     <ItemGroup>
       <Content Include="images\PM-ghost.png" />
+      <Content Include="images\PM-pacman-down.png" />
+      <Content Include="images\PM-pacman-left.png" />
       <Content Include="images\PM-pacman-right.png" />
+      <Content Include="images\PM-pacman-up.png" />
       <Content Include="images\PM-pacmanarena.png" />
       <Content Include="TODO.txt" />
     </ItemGroup>

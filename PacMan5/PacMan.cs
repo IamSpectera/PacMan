@@ -3,64 +3,64 @@ using System.Drawing;
 
 public class Pacman
 {
-    public int X { get; set; }
-    public int Y { get; set; }
+    public int GridX { get; set; }
+    public int GridY { get; set; }
     public Image Sprite { get; set; }
+    public string LastSuccessfulDirection { get; set; }
 
     public Pacman()
     {
         Sprite = Image.FromFile("..\\..\\images\\PM-pacman-right.png");
+        LastSuccessfulDirection = "Right";
     }
+
     public void Move(string direction, int gridSize, Func<int, int, bool> isCollidingWithWall, int windowWidth, int windowHeight)
     {
-        if (isCollidingWithWall(X, Y))
-        {
-            return;
-        }
-
-        int newX = X;
-        int newY = Y;
+        int newGridX = GridX;
+        int newGridY = GridY;
 
         switch (direction)
         {
             case "Up":
-                newY = (Y - gridSize < 0) ? 0 : Y - gridSize;
+                newGridY = Math.Max(0, GridY - 1);
                 break;
             case "Down":
-                newY += gridSize;
+                newGridY = Math.Min(windowHeight / gridSize - 1, GridY + 1);
                 break;
             case "Left":
-                newX = (X - gridSize < 0) ? 0 : X - gridSize;
+                newGridX = Math.Max(0, GridX - 1);
                 break;
             case "Right":
-                newX += gridSize;
+                newGridX = Math.Min(windowWidth / gridSize - 1, GridX + 1);
                 break;
         }
 
-        if (!isCollidingWithWall(newX, newY))
+        if (!isCollidingWithWall(newGridX, newGridY))
         {
-            X = newX;
-            Y = newY;
+            GridX = newGridX;
+            GridY = newGridY;
+            LastSuccessfulDirection = direction;
         }
         else
         {
-            // Revised logic for adjusting position on collision detection
-            switch (direction)
+            // If the new direction is blocked, try to move in the last successful direction
+            // But only if the new direction is different from the last successful direction
+            if (direction != LastSuccessfulDirection)
             {
-                case "Up":
-                    Y = newY - (newY % gridSize) + gridSize;
-                    break;
-                case "Down":
-                    Y = Math.Min(newY - (newY % gridSize), windowHeight - gridSize);
-                    break;
-                case "Left":
-                    X = newX - (newX % gridSize) + gridSize;
-                    break;
-                case "Right":
-                    X = Math.Min(newX - (newX % gridSize), windowWidth - gridSize);
-                    break;
+                Move(LastSuccessfulDirection, gridSize, isCollidingWithWall, windowWidth, windowHeight);
             }
         }
     }
+    
+    public class Food
+    {
+        public Rectangle Shape { get; set; }
+        public bool IsEaten { get; set; }
 
+        public Food(int x, int y, int size)
+        {
+            Shape = new Rectangle(x, y, size, size);
+            IsEaten = false;
+        }
+    }
 }
