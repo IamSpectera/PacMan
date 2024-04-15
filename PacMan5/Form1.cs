@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -10,7 +11,7 @@ namespace PacMan5
     {
         private GameBoard gameBoard;
         private Pacman pacman;
-        private Ghost ghost;
+        private List<Ghost> ghosts;
         private Timer gameTimer;
         private int gridSize = 20; // The size of pacman
 
@@ -25,9 +26,9 @@ namespace PacMan5
             pacman = new Pacman { GridX = 185 / gridSize, GridY = 280 / gridSize };
             
             // Initialize Ghost's position
-            ghost = new Ghost
+            ghosts = new List<Ghost>
             {
-                GridX = 10, GridY = 10
+                new Ghost { GridX = 10, GridY = 10 }
             }; 
 
             gameTimer = new Timer();
@@ -80,7 +81,11 @@ namespace PacMan5
                 e.Graphics.FillRectangle(Brushes.Blue, wall.X, wall.Y, gameBoard.WallThickness, gameBoard.WallThickness);
             }
 
-            e.Graphics.DrawImage(ghost.Sprite, new Rectangle(ghost.GridX * gridSize, ghost.GridY * gridSize, gridSize, gridSize));
+            foreach (var ghost in ghosts)
+            {
+                e.Graphics.DrawImage(ghost.Sprite, new Rectangle(ghost.GridX * gridSize, ghost.GridY * gridSize, gridSize, gridSize));
+            }        
+            
             // Draw the Pacman
             e.Graphics.DrawImage(pacman.Sprite,
                 new Rectangle((int)(pacman.GridX * gridSize), (int)(pacman.GridY * gridSize), gridSize, gridSize));
@@ -95,33 +100,56 @@ namespace PacMan5
             }
             
         }
-        
+
         private void GameTimer_Tick(object sender, EventArgs e)
         {
             // Store old position
             var oldGridX = pacman.GridX;
             var oldGridY = pacman.GridY;
-            var oldGhostGridX = ghost.GridX;
-            var oldGhostGridY = ghost.GridY;
 
-            // Move Ghost towards Pacman
-            ghost.MoveTowards(pacman, gridSize, IsCollidingWithWall, this.Width, this.Height);
-
-            // Check if Ghost has caught Pacman
-            if (ghost.GridX == pacman.GridX && ghost.GridY == pacman.GridY)
+            // Move Ghosts towards Pacman
+            foreach (var ghost in ghosts)
             {
-                gameTimer.Stop();
-                MessageBox.Show("Game Over, the ghost caught Pacman!");
-                return;
+                var oldGhostGridX = ghost.GridX;
+                var oldGhostGridY = ghost.GridY;
+
+                ghost.MoveTowards(pacman, gridSize, IsCollidingWithWall, this.Width, this.Height);
+
+                // Check if Ghost has caught Pacman
+                // Check if Ghost has caught Pacman
+                if (ghost.GridX == pacman.GridX && ghost.GridY == pacman.GridY)
+                {
+                    pacman.Lives--; // Decrease the number of lives
+
+                    if (pacman.Lives > 0)
+                    {
+                        // Reset the game board
+                        ResetGameBoard();
+
+                        // Redraw the game board
+                        this.Invalidate();
+
+                        // Pause for 3 seconds
+                        gameTimer.Stop();
+                        System.Threading.Thread.Sleep(3000);
+                        gameTimer.Start();
+                    }
+                    else
+                    {
+                        // Game over
+                        gameTimer.Stop();
+                        MessageBox.Show("Game Over, the ghost caught Pacman!");
+                        return;
+                    }
+                }
+
+                // Redraws where ghost was so he isn't there no more
+                this.Invalidate(new Rectangle(oldGhostGridX * gridSize, oldGhostGridY * gridSize, gridSize, gridSize));
+
+                // Draws ghost in new location
+                this.Invalidate(new Rectangle(ghost.GridX * gridSize, ghost.GridY * gridSize, gridSize, gridSize));
             }
 
-            // Redraws where ghost was so he isn't there no more
-            this.Invalidate(new Rectangle(oldGhostGridX * gridSize, oldGhostGridY * gridSize, gridSize, gridSize));
-
-            // Draws ghost in new location
-            this.Invalidate(new Rectangle(ghost.GridX * gridSize, ghost.GridY * gridSize, gridSize, gridSize));
-            
-            
             // Move Pacman based on current direction
             pacman.Move(direction, gridSize, IsCollidingWithWall, this.Width, this.Height);
 
@@ -133,13 +161,13 @@ namespace PacMan5
                     break;
                 }
             }
-            
+
             if (!gameBoard.Foods.Any(food => !food.IsEaten))
             {
                 gameTimer.Stop();
                 MessageBox.Show("Congratulations, you won!");
             }
-            
+
             // Redraws where pacman was so he isnt there no more
             this.Invalidate(new Rectangle(oldGridX * gridSize, oldGridY * gridSize, gridSize, gridSize));
 
@@ -154,6 +182,23 @@ namespace PacMan5
 
             var pacmanRect = new Rectangle(x, y, gridSize, gridSize);
             return gameBoard.Walls.Any(wall => wall.IntersectsWith(pacmanRect));
+        }
+        
+        private void ResetGameBoard()
+        {
+            // Reset Pacman's position
+            pacman.GridX = 185 / gridSize;
+            pacman.GridY = 280 / gridSize;
+
+            // Reset Ghosts' positions
+            ghosts.ForEach(ghost =>
+            {
+                ghost.GridX = 10;
+                ghost.GridY = 10;
+            });
+
+            // Recreate the game board
+            gameBoard = new GameBoard(20, 10, 20);
         }
     }
 }

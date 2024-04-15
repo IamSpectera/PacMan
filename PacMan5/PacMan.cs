@@ -7,6 +7,8 @@ public class Pacman
     public int GridY { get; set; }
     public Image Sprite { get; set; }
     public string LastSuccessfulDirection { get; set; }
+    
+    public int Lives { get; set; } = 3; // Initialize with 3 lives
 
     public Pacman()
     {
