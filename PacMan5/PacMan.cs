@@ -40,6 +40,23 @@ public class Pacman
             GridX = newGridX;
             GridY = newGridY;
             LastSuccessfulDirection = direction;
+
+            // Change the sprite based on the direction
+            switch (direction)
+            {
+                case "Up":
+                    Sprite = Image.FromFile("..\\..\\images\\PM-pacman-up.png");
+                    break;
+                case "Down":
+                    Sprite = Image.FromFile("..\\..\\images\\PM-pacman-down.png");
+                    break;
+                case "Left":
+                    Sprite = Image.FromFile("..\\..\\images\\PM-pacman-left.png");
+                    break;
+                case "Right":
+                    Sprite = Image.FromFile("..\\..\\images\\PM-pacman-right.png");
+                    break;
+            }
         }
         else
         {
